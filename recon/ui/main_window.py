@@ -112,16 +112,16 @@ class ReconApp:
         options = ttk.Frame(scan)
         options.pack(fill=tk.X, pady=(14, 0))
         self.use_all = tk.BooleanVar(value=True)
-        ttk.Checkbutton(options, text="subfinder -all",
-                        variable=self.use_all).pack(side=tk.LEFT, padx=(0, 18))
+        ttk.Checkbutton(options, text="subfinder -all", style="Toggle.Toolbutton",
+                        variable=self.use_all).pack(side=tk.LEFT, padx=(0, 8))
         self.use_brute = tk.BooleanVar(value=True)
-        ttk.Checkbutton(options, text="dnsx brute recursion",
-                        variable=self.use_brute).pack(side=tk.LEFT, padx=(0, 18))
+        ttk.Checkbutton(options, text="dnsx brute recursion", style="Toggle.Toolbutton",
+                        variable=self.use_brute).pack(side=tk.LEFT, padx=(0, 8))
         self.shots_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(options, text="screenshots",
-                        variable=self.shots_var).pack(side=tk.LEFT, padx=(0, 18))
+        ttk.Checkbutton(options, text="screenshots", style="Toggle.Toolbutton",
+                        variable=self.shots_var).pack(side=tk.LEFT, padx=(0, 8))
         self.takeover_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(options, text="takeover check",
+        ttk.Checkbutton(options, text="takeover check", style="Toggle.Toolbutton",
                         variable=self.takeover_var).pack(side=tk.LEFT)
 
         actions = ttk.Frame(body)
@@ -151,7 +151,7 @@ class ReconApp:
 
         progress = ttk.Frame(body)
         progress.pack(fill=tk.X, pady=(14, 0))
-        self.prog = ttk.Progressbar(progress, mode="indeterminate", length=160,
+        self.prog = ttk.Progressbar(progress, mode="determinate", value=0, length=160,
                                     style="Accent.Horizontal.TProgressbar")
         self.prog.pack(side=tk.LEFT)
         self.stats_var = tk.StringVar(value="idle")
@@ -312,6 +312,7 @@ class ReconApp:
         self.start_btn.config(state=tk.DISABLED)
         self.resume_btn.config(state=tk.DISABLED)
         self.stop_btn.config(state=tk.NORMAL)
+        self.prog.config(mode="indeterminate")
         self.prog.start(12)
         self._refresh()
         self._log(banner)
@@ -330,6 +331,7 @@ class ReconApp:
 
     def _finish_ui(self) -> None:
         self.prog.stop()
+        self.prog.config(mode="determinate", value=0)
         self.start_btn.config(state=tk.NORMAL)
         self.stop_btn.config(state=tk.DISABLED)
         self._refresh()

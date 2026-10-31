@@ -221,6 +221,26 @@ def apply(root, style, palette: Palette) -> dict:
         foreground=[("disabled", palette.muted)],
     )
 
+    # options render as toggle chips (no default indicator box)
+    style.configure(
+        "Toggle.Toolbutton",
+        background=palette.bg,
+        foreground=palette.muted,
+        bordercolor=palette.border,
+        lightcolor=palette.bg,
+        darkcolor=palette.bg,
+        padding=(12, 6),
+        relief="flat",
+        borderwidth=1,
+        font=fonts["small"],
+    )
+    style.map(
+        "Toggle.Toolbutton",
+        background=[("selected", palette.surface_alt), ("active", palette.surface)],
+        foreground=[("selected", palette.text), ("active", palette.text)],
+        bordercolor=[("selected", palette.accent), ("active", palette.border)],
+    )
+
     # results table
     style.configure(
         "Treeview",
