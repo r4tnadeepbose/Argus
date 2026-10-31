@@ -19,7 +19,7 @@ labels: bug
 
 - OS:
 - Python version (`python --version`):
-- Recon version:
+- Argus version:
 - subfinder / httpx / dnsx versions:
 - Target type: owned / lab / bug-bounty scope
 

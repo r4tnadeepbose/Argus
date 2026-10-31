@@ -6,7 +6,7 @@ Only on domains you own or are explicitly authorized to test. Authorization can
 come from ownership or from a program's published scope. When in doubt, get
 written permission. See the notice in the [README](../README.md).
 
-### Does Recon send my data anywhere?
+### Does Argus send my data anywhere?
 
 No. The application has no telemetry and no network calls other than running
 `subfinder`, `httpx`, `dnsx` and fetching pages for takeover checks. Results

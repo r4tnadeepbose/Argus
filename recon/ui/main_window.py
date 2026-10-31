@@ -55,7 +55,7 @@ class ReconApp:
     def _build_ui(self) -> None:
         header = ttk.Frame(self.root, padding=(24, 18, 24, 10))
         header.pack(fill=tk.X)
-        ttk.Label(header, text="RECON", style="Title.TLabel").pack(side=tk.LEFT)
+        ttk.Label(header, text="ARGUS", style="Title.TLabel").pack(side=tk.LEFT)
         ttk.Label(header, text="  subdomain reconnaissance",
                   style="Muted.TLabel").pack(side=tk.LEFT, pady=(7, 0))
 

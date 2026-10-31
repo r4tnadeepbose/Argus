@@ -2,7 +2,7 @@
 
 ## 1. Python
 
-Recon needs **Python 3.10 or newer** with Tkinter.
+Argus needs **Python 3.10 or newer** with Tkinter.
 
 - **Windows**: install from python.org and enable *Add Python to PATH*. Tkinter
   is included in the official installer.
@@ -44,7 +44,7 @@ the **Screenshots** checkbox; everything else still works.
 
 ## 3. Configure tool locations
 
-Recon first checks absolute paths in [`recon/constants.py`](../recon/constants.py)
+Argus first checks absolute paths in [`recon/constants.py`](../recon/constants.py)
 (`TOOL_PATHS`), then `PATH`. Edit the paths if your binaries live elsewhere:
 
 ```python
@@ -55,7 +55,7 @@ TOOL_PATHS = {
 }
 ```
 
-## 4. Run Recon
+## 4. Run Argus
 
 No Python packages are required:
 
@@ -69,7 +69,7 @@ Optionally install it as a console script:
 
 ```bash
 python -m pip install -e .
-recon-gui
+argus
 ```
 
 ## 5. Developer setup

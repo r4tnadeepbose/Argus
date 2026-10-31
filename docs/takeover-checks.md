@@ -4,7 +4,7 @@ Subdomain takeover happens when a DNS record (usually a CNAME) still points at
 a third-party service, but nobody owns that resource on the service. An
 attacker who claims it can serve content under **your** domain.
 
-Recon flags hosts whose CNAME targets one of these services and whose page looks
+Argus flags hosts whose CNAME targets one of these services and whose page looks
 like an unclaimed resource.
 
 ## How it works

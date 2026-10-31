@@ -4,6 +4,13 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-10-31
+
+### Changed
+- Renamed the application to **Argus**. The Python package remains `recon`;
+  `python argus.py`, `python recon_gui.py` and `python -m recon` all work, and
+  the console script is now `argus` (`recon-gui` is kept as an alias).
+
 ## [1.1.0] - 2026-10-31
 
 ### Added

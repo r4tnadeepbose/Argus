@@ -1,11 +1,16 @@
-# Recon
+# Argus
 
-A Windows/Linux desktop GUI for recursive subdomain reconnaissance. It chains
+Argus is a Windows/Linux desktop GUI for recursive subdomain reconnaissance. It chains
 [`subfinder`](https://github.com/projectdiscovery/subfinder),
 [`httpx`](https://github.com/projectdiscovery/httpx) and
 [`dnsx`](https://github.com/projectdiscovery/dnsx) into a repeatable pipeline
 and adds a results table, session resume, run history and subdomain-takeover
 checks.
+
+Repository: [github.com/r4tnadeepbose/Argus](https://github.com/r4tnadeepbose/Argus)
+
+> The application is named **Argus**; the internal Python package is still
+> `recon`, which is why `python -m recon` and the `recon/` folder appear below.
 
 > **Authorized use only.** Run this tool only against domains you own or are
 > explicitly authorized to test (for example a published bug-bounty scope).
@@ -50,8 +55,8 @@ go install github.com/projectdiscovery/dnsx/cmd/dnsx@latest
 #    edit TOOL_PATHS in recon/constants.py
 
 # 3. run the GUI
-python recon_gui.py
-#    or: python -m recon
+python argus.py
+#    or: python recon_gui.py  |  python -m recon
 ```
 
 On Windows, the default `TOOL_PATHS` in
@@ -110,6 +115,7 @@ cycle n
 ├── scripts/                # install/run helpers (PowerShell + sh)
 ├── wordlists/              # sample prefix list
 ├── .github/                # CI, issue/PR templates
+├── argus.py                # launcher
 ├── recon_gui.py            # backward-compatible launcher
 ├── pyproject.toml
 ├── requirements.txt

@@ -11,8 +11,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RUNS_DIR = PROJECT_ROOT / "runs"
 RESUME_FILE = PROJECT_ROOT / "resume.cfg"
 
-SOFTWARE_NAME = "recon-gui"
-VERSION = "1.1.0"
+SOFTWARE_NAME = "Argus"
+VERSION = "1.2.0"
 
 # Prefixes per dnsx invocation.
 CHUNK = 400
@@ -20,7 +20,7 @@ CHUNK = 400
 # Seconds allowed for a takeover body fetch.
 HTTP_TIMEOUT = 8
 
-USER_AGENT = "Mozilla/5.0 (compatible; recon-gui)"
+USER_AGENT = "Mozilla/5.0 (compatible; argus)"
 
 # Absolute tool locations tried first, then PATH.
 TOOL_PATHS = {

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for improving Recon.
+Thanks for improving Argus.
 
 ## Ground rules
 

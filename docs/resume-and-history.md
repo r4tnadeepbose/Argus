@@ -2,7 +2,7 @@
 
 ## Why it exists
 
-Brute forcing can take a long time. Recon writes enough state to continue a run
+Brute forcing can take a long time. Argus writes enough state to continue a run
 after **Stop**, a crash, or a closed window.
 
 ## Files

@@ -1,6 +1,6 @@
 # Architecture
 
-Recon is split into small, UI-independent modules so the pipeline can be tested
+Argus is split into small, UI-independent modules so the pipeline can be tested
 without a display or external binaries.
 
 ## Module map
