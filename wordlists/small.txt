@@ -1,0 +1,23 @@
+# Small starter wordlist for recursive brute force.
+# Blank lines and lines starting with '#' are ignored.
+www
+api
+dev
+staging
+test
+admin
+app
+portal
+auth
+sso
+vpn
+mail
+cdn
+static
+docs
+status
+git
+ci
+monitor
+v1
+v2
