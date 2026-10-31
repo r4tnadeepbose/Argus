@@ -17,6 +17,7 @@
 | **Copy URLs / Copy selected** | Put URLs on the clipboard. |
 | **Open screenshot** | Open the selected host's capture. |
 | **Runs folder** | Open `runs/` in the file manager. |
+| **Theme · Slate / Paper** | Switch between the dark Slate palette and the warm Paper palette. |
 
 ## What happens during a run
 

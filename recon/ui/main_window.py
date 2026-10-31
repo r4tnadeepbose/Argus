@@ -46,6 +46,8 @@ class ReconApp:
 
         self._build_ui()
         self._apply_component_palette()
+        self.root.update_idletasks()
+        theme.set_titlebar_dark(self.root, self.dark)
         self._poll_log()
         self._preflight()
         self._load_resume_hint()
@@ -174,6 +176,7 @@ class ReconApp:
         self.palette = theme.PALETTES["dark" if self.dark else "light"]
         self.fonts = theme.apply(self.root, self.style, self.palette)
         self._apply_component_palette()
+        theme.set_titlebar_dark(self.root, self.dark)
         self.theme_btn.config(text=f"Theme · {self.palette.name}")
 
     def _pick_wordlist(self) -> None:

@@ -26,6 +26,7 @@ checks.
 | Resume | Stop at any time and continue from the exact dnsx chunk |
 | Run history | Every run keeps `state.json`, `results.json` and screenshots under `runs/<run_id>/` |
 | Export | JSON, CSV, copy-all/selected URLs, open screenshots |
+| Theme | Minimal retro-modern UI with **Slate** (dark) and **Paper** (warm light) palettes |
 | UI | Live results table, progress bar, streaming log |
 
 ## Requirements
@@ -102,7 +103,8 @@ cycle n
 │   └── ui/
 │       ├── main_window.py  # application window
 │       ├── results_table.py
-│       └── log_panel.py
+│       ├── log_panel.py
+│       └── theme.py        # Slate/Paper palettes + ttk styles
 ├── tests/                  # pytest suite (headless, no network)
 ├── docs/                   # architecture, usage, troubleshooting, FAQ
 ├── scripts/                # install/run helpers (PowerShell + sh)

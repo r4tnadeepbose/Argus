@@ -18,6 +18,7 @@ without a display or external binaries.
 | `recon/takeover.py` | `TakeoverChecker`: CNAME collection, HTTP fingerprinting. |
 | `recon/pipeline.py` | `ReconPipeline`: the recursive scan. |
 | `recon/ui/main_window.py` | Widgets, threading, export/copy actions. |
+| `recon/ui/theme.py` | Palettes (Slate/Paper) and ttk style configuration. |
 | `recon/ui/results_table.py` | Sortable host table. |
 | `recon/ui/log_panel.py` | Queue-backed log widget. |
 

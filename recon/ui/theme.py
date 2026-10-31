@@ -20,6 +20,8 @@ class Palette:
     muted: str
     accent: str
     accent_text: str
+    accent_soft: str
+    accent_soft_text: str
     danger: str
     success: str
     select_bg: str
@@ -36,6 +38,8 @@ SLATE = Palette(
     muted="#8d887f",
     accent="#d99a5b",
     accent_text="#1b1611",
+    accent_soft="#33291d",
+    accent_soft_text="#e7c9a1",
     danger="#cf7b6d",
     success="#8fbf9f",
     select_bg="#343b44",
@@ -52,6 +56,8 @@ PAPER = Palette(
     muted="#8b8378",
     accent="#b4552d",
     accent_text="#fff8f1",
+    accent_soft="#efdccb",
+    accent_soft_text="#76351b",
     danger="#a8442f",
     success="#4f7d5a",
     select_bg="#ead8c3",
@@ -75,6 +81,24 @@ def _pick_family(root, families: tuple[str, ...]) -> str:
 
     available = set(tkfont.families(root))
     return next((family for family in families if family in available), families[-1])
+
+
+def set_titlebar_dark(root, dark: bool) -> None:
+    """Best-effort native dark title bar on Windows 10/11. No-op elsewhere."""
+    import sys
+
+    if sys.platform != "win32":
+        return
+    try:
+        import ctypes
+
+        hwnd = ctypes.windll.user32.GetParent(root.winfo_id())
+        value = ctypes.c_int(1 if dark else 0)
+        for attribute in (20, 19):  # DWMWA_USE_IMMERSIVE_DARK_MODE (new/old builds)
+            ctypes.windll.dwmapi.DwmSetWindowAttribute(
+                hwnd, attribute, ctypes.byref(value), ctypes.sizeof(value))
+    except Exception:  # noqa: BLE001 - cosmetic only
+        pass
 
 
 def apply(root, style, palette: Palette) -> dict:
@@ -236,9 +260,12 @@ def apply(root, style, palette: Palette) -> dict:
     )
     style.map(
         "Toggle.Toolbutton",
-        background=[("selected", palette.surface_alt), ("active", palette.surface)],
-        foreground=[("selected", palette.text), ("active", palette.text)],
-        bordercolor=[("selected", palette.accent), ("active", palette.border)],
+        background=[("selected", palette.accent_soft), ("active", palette.surface)],
+        foreground=[("selected", palette.accent_soft_text), ("active", palette.text)],
+        bordercolor=[("selected", palette.accent), ("!selected", palette.border),
+                     ("active", palette.border)],
+        lightcolor=[("selected", palette.accent_soft)],
+        darkcolor=[("selected", palette.accent_soft)],
     )
 
     # results table
@@ -295,6 +322,8 @@ def apply(root, style, palette: Palette) -> dict:
 
     # paned window sashes
     style.configure("TPanedwindow", background=palette.bg)
-    style.configure("Sash", background=palette.bg, sashthickness=10, gripcount=0)
+    style.configure("Sash", background=palette.bg, sashthickness=10, gripcount=0,
+                    lightcolor=palette.border, darkcolor=palette.border,
+                    bordercolor=palette.border)
 
     return fonts

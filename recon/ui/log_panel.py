@@ -5,7 +5,7 @@ from __future__ import annotations
 import queue
 import tkinter as tk
 from collections.abc import Callable
-from tkinter import scrolledtext, ttk
+from tkinter import ttk
 
 
 class LogPanel(ttk.Frame):
@@ -21,11 +21,16 @@ class LogPanel(ttk.Frame):
             ttk.Button(header, text="clear", style="Ghost.TButton",
                        command=on_clear).pack(side=tk.RIGHT)
 
-        self.text = scrolledtext.ScrolledText(
-            self, state=tk.DISABLED, height=height, wrap="none",
+        body = ttk.Frame(self)
+        body.pack(fill=tk.BOTH, expand=True)
+        self.text = tk.Text(
+            body, state=tk.DISABLED, height=height, wrap="none",
             relief="flat", borderwidth=0, highlightthickness=0,
             padx=14, pady=12)
-        self.text.pack(fill=tk.BOTH, expand=True)
+        scrollbar = ttk.Scrollbar(body, orient=tk.VERTICAL, command=self.text.yview)
+        self.text.configure(yscrollcommand=scrollbar.set)
+        self.text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y, padx=(6, 0))
 
     def apply_palette(self, palette, fonts) -> None:
         self.text.configure(
