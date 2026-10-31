@@ -12,7 +12,7 @@ RUNS_DIR = PROJECT_ROOT / "runs"
 RESUME_FILE = PROJECT_ROOT / "resume.cfg"
 
 SOFTWARE_NAME = "recon-gui"
-VERSION = "1.0.1"
+VERSION = "1.1.0"
 
 # Prefixes per dnsx invocation.
 CHUNK = 400

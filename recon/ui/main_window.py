@@ -19,6 +19,7 @@ from ..runner import CommandRunner
 from ..state import RunStore
 from ..tools import missing_tools, tool_path
 from ..wordlists import load_wordlist
+from . import theme
 from .log_panel import LogPanel
 from .results_table import ResultsTable
 
@@ -34,92 +35,146 @@ class ReconApp:
         self.runner: CommandRunner | None = None
         self._hint_logged = False
 
-        self.root.title(f"{SOFTWARE_NAME} {VERSION} - subdomain recon")
-        self.root.geometry("1180x820")
+        self.dark = True
+        self.style = ttk.Style(self.root)
+        self.palette = theme.PALETTES["dark"]
+        self.fonts = theme.apply(self.root, self.style, self.palette)
+
+        self.root.title(f"{SOFTWARE_NAME} {VERSION}")
+        self.root.geometry("1180x840")
+        self.root.minsize(1000, 680)
 
         self._build_ui()
+        self._apply_component_palette()
         self._poll_log()
         self._preflight()
         self._load_resume_hint()
 
     # ---------- UI ----------
     def _build_ui(self) -> None:
-        row1 = ttk.Frame(self.root, padding=10)
-        row1.pack(fill=tk.X)
+        header = ttk.Frame(self.root, padding=(24, 18, 24, 10))
+        header.pack(fill=tk.X)
+        ttk.Label(header, text="RECON", style="Title.TLabel").pack(side=tk.LEFT)
+        ttk.Label(header, text="  subdomain reconnaissance",
+                  style="Muted.TLabel").pack(side=tk.LEFT, pady=(7, 0))
 
-        ttk.Label(row1, text="Target:").grid(row=0, column=0, sticky=tk.W)
+        ttk.Label(header, text=f"v{VERSION}", style="Muted.TLabel").pack(side=tk.RIGHT)
+        self.theme_btn = ttk.Button(header, text=f"Theme · {self.palette.name}",
+                                    style="Ghost.TButton", command=self._toggle_theme)
+        self.theme_btn.pack(side=tk.RIGHT, padx=(0, 16))
+
+        ttk.Separator(self.root, orient=tk.HORIZONTAL).pack(fill=tk.X)
+
+        body = ttk.Frame(self.root, padding=(24, 16, 24, 18))
+        body.pack(fill=tk.BOTH, expand=True)
+
+        scan = ttk.Frame(body)
+        scan.pack(fill=tk.X)
+        ttk.Label(scan, text="SCAN", style="Section.TLabel").pack(anchor=tk.W)
+
+        fields = ttk.Frame(scan)
+        fields.pack(fill=tk.X, pady=(8, 0))
+        fields.columnconfigure(0, weight=1)
+
+        target = ttk.Frame(fields)
+        target.grid(row=0, column=0, sticky="ew", padx=(0, 18))
+        ttk.Label(target, text="Target", style="Muted.TLabel").pack(anchor=tk.W)
         self.domain_var = tk.StringVar(value="zepto.com")
-        ttk.Entry(row1, textvariable=self.domain_var, width=30).grid(
-            row=0, column=1, padx=(6, 12))
+        ttk.Entry(target, textvariable=self.domain_var).pack(fill=tk.X, pady=(5, 0))
 
-        ttk.Label(row1, text="Cycles:").grid(row=0, column=2)
+        cycles = ttk.Frame(fields)
+        cycles.grid(row=0, column=1, sticky="w", padx=(0, 18))
+        ttk.Label(cycles, text="Cycles", style="Muted.TLabel").pack(anchor=tk.W)
         self.cycles_var = tk.StringVar(value="3")
-        ttk.Spinbox(row1, from_=1, to=10, textvariable=self.cycles_var, width=4).grid(
-            row=0, column=3, padx=(6, 12))
+        ttk.Spinbox(cycles, from_=1, to=10, width=6,
+                    textvariable=self.cycles_var).pack(anchor=tk.W, pady=(5, 0))
 
-        ttk.Label(row1, text="Status:").grid(row=0, column=4)
+        status = ttk.Frame(fields)
+        status.grid(row=0, column=2, sticky="w")
+        ttk.Label(status, text="Status codes", style="Muted.TLabel").pack(anchor=tk.W)
         self.status_var = tk.StringVar(value="200,301,302,403")
-        ttk.Entry(row1, textvariable=self.status_var, width=18).grid(
-            row=0, column=5, padx=(6, 12))
+        ttk.Entry(status, textvariable=self.status_var, width=22).pack(
+            anchor=tk.W, pady=(5, 0))
 
-        self.shots_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(row1, text="Screenshots (needs Chrome)",
-                        variable=self.shots_var).grid(row=0, column=6, padx=(0, 12))
-        self.takeover_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(row1, text="Takeover check",
-                        variable=self.takeover_var).grid(row=0, column=7)
-
-        row2 = ttk.Frame(self.root, padding=(10, 0))
-        row2.pack(fill=tk.X)
-        self.use_all = tk.BooleanVar(value=True)
-        ttk.Checkbutton(row2, text="subfinder -all", variable=self.use_all).pack(side=tk.LEFT)
-        self.use_brute = tk.BooleanVar(value=True)
-        ttk.Checkbutton(row2, text="dnsx brute-force recursion",
-                        variable=self.use_brute).pack(side=tk.LEFT, padx=(16, 0))
-
-        ttk.Label(row2, text="Wordlist:").pack(side=tk.LEFT, padx=(16, 4))
+        wordlist = ttk.Frame(scan)
+        wordlist.pack(fill=tk.X, pady=(14, 0))
+        ttk.Label(wordlist, text="Wordlist", style="Muted.TLabel").pack(anchor=tk.W)
+        wordlist_row = ttk.Frame(wordlist)
+        wordlist_row.pack(fill=tk.X, pady=(5, 0))
         self.wordlist_var = tk.StringVar(value="")
-        ttk.Entry(row2, textvariable=self.wordlist_var, width=40).pack(side=tk.LEFT)
-        ttk.Button(row2, text="Browse", command=self._pick_wordlist).pack(
-            side=tk.LEFT, padx=(4, 0))
+        ttk.Entry(wordlist_row, textvariable=self.wordlist_var).pack(
+            side=tk.LEFT, fill=tk.X, expand=True)
+        ttk.Button(wordlist_row, text="Browse", style="Ghost.TButton",
+                   command=self._pick_wordlist).pack(side=tk.LEFT, padx=(8, 0))
+        ttk.Label(wordlist_row, text="empty = built-in list", style="Muted.TLabel").pack(
+            side=tk.LEFT, padx=(12, 0))
 
-        buttons = ttk.Frame(self.root, padding=10)
-        buttons.pack(fill=tk.X)
-        self.start_btn = ttk.Button(buttons, text="Start", command=self.start)
+        options = ttk.Frame(scan)
+        options.pack(fill=tk.X, pady=(14, 0))
+        self.use_all = tk.BooleanVar(value=True)
+        ttk.Checkbutton(options, text="subfinder -all",
+                        variable=self.use_all).pack(side=tk.LEFT, padx=(0, 18))
+        self.use_brute = tk.BooleanVar(value=True)
+        ttk.Checkbutton(options, text="dnsx brute recursion",
+                        variable=self.use_brute).pack(side=tk.LEFT, padx=(0, 18))
+        self.shots_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(options, text="screenshots",
+                        variable=self.shots_var).pack(side=tk.LEFT, padx=(0, 18))
+        self.takeover_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(options, text="takeover check",
+                        variable=self.takeover_var).pack(side=tk.LEFT)
+
+        actions = ttk.Frame(body)
+        actions.pack(fill=tk.X, pady=(18, 0))
+        self.start_btn = ttk.Button(actions, text="Start", style="Accent.TButton",
+                                    command=self.start)
         self.start_btn.pack(side=tk.LEFT)
-        self.resume_btn = ttk.Button(buttons, text="Resume", command=self.resume,
+        self.resume_btn = ttk.Button(actions, text="Resume", command=self.resume,
                                      state=tk.DISABLED)
         self.resume_btn.pack(side=tk.LEFT, padx=8)
-        self.stop_btn = ttk.Button(buttons, text="Stop", command=self.stop,
-                                   state=tk.DISABLED)
+        self.stop_btn = ttk.Button(actions, text="Stop", style="Danger.TButton",
+                                   command=self.stop, state=tk.DISABLED)
         self.stop_btn.pack(side=tk.LEFT)
-        ttk.Separator(buttons, orient=tk.VERTICAL).pack(side=tk.LEFT, fill=tk.Y, padx=10)
-        ttk.Button(buttons, text="Export JSON",
-                   command=lambda: self.export("json")).pack(side=tk.LEFT)
-        ttk.Button(buttons, text="Export CSV",
-                   command=lambda: self.export("csv")).pack(side=tk.LEFT, padx=8)
-        ttk.Button(buttons, text="Copy URLs", command=self.copy_urls).pack(side=tk.LEFT)
-        ttk.Button(buttons, text="Copy selected",
-                   command=self.copy_selected).pack(side=tk.LEFT, padx=8)
-        ttk.Button(buttons, text="Open screenshot",
-                   command=self.open_shot).pack(side=tk.LEFT)
-        ttk.Button(buttons, text="Runs folder", command=self.open_runs).pack(
-            side=tk.LEFT, padx=8)
-        ttk.Button(buttons, text="Clear log", command=self.clear_log).pack(side=tk.LEFT)
 
-        progress = ttk.Frame(self.root, padding=(10, 0))
-        progress.pack(fill=tk.X)
-        self.prog = ttk.Progressbar(progress, mode="indeterminate", length=220)
+        right = ttk.Frame(actions)
+        right.pack(side=tk.RIGHT)
+        for label, command in reversed([
+            ("Export JSON", lambda: self.export("json")),
+            ("Export CSV", lambda: self.export("csv")),
+            ("Copy URLs", self.copy_urls),
+            ("Copy selected", self.copy_selected),
+            ("Open screenshot", self.open_shot),
+            ("Runs folder", self.open_runs),
+        ]):
+            ttk.Button(right, text=label, style="Ghost.TButton",
+                       command=command).pack(side=tk.RIGHT, padx=(8, 0))
+
+        progress = ttk.Frame(body)
+        progress.pack(fill=tk.X, pady=(14, 0))
+        self.prog = ttk.Progressbar(progress, mode="indeterminate", length=160,
+                                    style="Accent.Horizontal.TProgressbar")
         self.prog.pack(side=tk.LEFT)
         self.stats_var = tk.StringVar(value="idle")
-        ttk.Label(progress, textvariable=self.stats_var).pack(side=tk.LEFT, padx=12)
+        ttk.Label(progress, textvariable=self.stats_var,
+                  style="Muted.TLabel").pack(side=tk.LEFT, padx=12)
 
-        paned = ttk.PanedWindow(self.root, orient=tk.VERTICAL)
-        paned.pack(fill=tk.BOTH, expand=True, padx=10, pady=(8, 10))
+        paned = ttk.PanedWindow(body, orient=tk.VERTICAL)
+        paned.pack(fill=tk.BOTH, expand=True, pady=(16, 0))
         self.table = ResultsTable(paned, on_open=self._open_host)
         paned.add(self.table, weight=3)
-        self.log_panel = LogPanel(paned, height=14)
+        self.log_panel = LogPanel(paned, height=12, on_clear=self.clear_log)
         paned.add(self.log_panel, weight=2)
+
+    def _apply_component_palette(self) -> None:
+        self.table.apply_palette(self.palette)
+        self.log_panel.apply_palette(self.palette, self.fonts)
+
+    def _toggle_theme(self) -> None:
+        self.dark = not self.dark
+        self.palette = theme.PALETTES["dark" if self.dark else "light"]
+        self.fonts = theme.apply(self.root, self.style, self.palette)
+        self._apply_component_palette()
+        self.theme_btn.config(text=f"Theme · {self.palette.name}")
 
     def _pick_wordlist(self) -> None:
         path = filedialog.askopenfilename(
@@ -297,7 +352,7 @@ class ReconApp:
         self.table.render(results)
         state = "running" if self.is_running else "idle"
         takeovers = len(self.pipeline.takeovers) if self.pipeline else 0
-        self.stats_var.set(f"{state} | live: {len(results)} | takeovers: {takeovers}")
+        self.stats_var.set(f"{state} · {len(results)} live · {takeovers} takeover")
 
     def _load_resume_hint(self) -> None:
         found = self.store.resumable()
