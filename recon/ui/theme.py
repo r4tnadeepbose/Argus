@@ -97,6 +97,9 @@ def set_titlebar_dark(root, dark: bool) -> None:
         for attribute in (20, 19):  # DWMWA_USE_IMMERSIVE_DARK_MODE (new/old builds)
             ctypes.windll.dwmapi.DwmSetWindowAttribute(
                 hwnd, attribute, ctypes.byref(value), ctypes.sizeof(value))
+        # Without a frame refresh Windows keeps the old caption until redraw.
+        swp_flags = 0x0020 | 0x0001 | 0x0002 | 0x0004  # FRAMECHANGED|NOSIZE|NOMOVE|NOZORDER
+        ctypes.windll.user32.SetWindowPos(hwnd, 0, 0, 0, 0, 0, swp_flags)
     except Exception:  # noqa: BLE001 - cosmetic only
         pass
 
