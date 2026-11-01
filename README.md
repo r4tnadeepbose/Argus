@@ -22,6 +22,12 @@ Repository: [github.com/r4tnadeepbose/Argus](https://github.com/r4tnadeepbose/Ar
 
 ## Features
 
+<p align="center">
+  <img src="docs/screenshots/argus-dark.png" alt="Argus main window in the Slate dark theme" width="860">
+  <br>
+  <sub>Argus main window — Slate dark theme, scan form, result table and streaming log.</sub>
+</p>
+
 | Feature | Description |
 |---|---|
 | Recursive enumeration | Passive discovery with `subfinder`, active prefix brute force with `dnsx`, repeated up to *N* cycles |
@@ -31,7 +37,7 @@ Repository: [github.com/r4tnadeepbose/Argus](https://github.com/r4tnadeepbose/Ar
 | Resume | Stop at any time and continue from the exact dnsx chunk |
 | Run history | Every run keeps `state.json`, `results.json` and screenshots under `runs/<run_id>/` |
 | Export | JSON, CSV, copy-all/selected URLs, open screenshots |
-| Theme | Minimal retro-modern UI with **Slate** (dark) and **Paper** (warm light) palettes |
+| Theme | Minimal retro-modern UI with **Slate** (dark) and **Paper** (warm light) palettes, switchable from the ☀/☾ header button |
 | UI | Live results table, progress bar, streaming log |
 
 ## Requirements
@@ -62,6 +68,12 @@ python argus.py
 On Windows, the default `TOOL_PATHS` in
 [`recon/constants.py`](recon/constants.py) point at `%USERPROFILE%\go\bin`.
 
+<p align="center">
+  <img src="docs/screenshots/argus-light.png" alt="Argus main window in the Paper light theme" width="860">
+  <br>
+  <sub>Same window in the Paper light theme — the ☀ Light / ☾ Dark button switches palettes at runtime.</sub>
+</p>
+
 ## Usage
 
 1. Enter a target such as `example.com`.
@@ -71,6 +83,12 @@ On Windows, the default `TOOL_PATHS` in
 5. Press **Start**. Rows appear as hosts are found; double-click a row to open it.
 6. **Stop** at any time, then **Resume** to continue where you left off.
 7. **Export JSON/CSV** or **Copy URLs** for reporting.
+
+<p align="center">
+  <img src="docs/screenshots/argus-running-dark.png" alt="Argus running a scan with live results and log output" width="860">
+  <br>
+  <sub>A live run: 7 hosts found, two takeover candidates, cycle 2 in progress.</sub>
+</p>
 
 Detailed walkthrough: [docs/usage.md](docs/usage.md).
 
@@ -89,6 +107,12 @@ cycle n
         ▼
   resolved names -> next cycle roots
 ```
+
+<p align="center">
+  <img src="docs/screenshots/argus-results-dark.png" alt="Argus results table and pipeline log" width="860">
+  <br>
+  <sub>Pipeline output: status codes, host, title and tech per live host, with the takeover verdict highlighted.</sub>
+</p>
 
 ## Repository layout
 
@@ -112,6 +136,7 @@ cycle n
 │       └── theme.py        # Slate/Paper palettes + ttk styles
 ├── tests/                  # pytest suite (headless, no network)
 ├── docs/                   # architecture, usage, troubleshooting, FAQ
+│   └── screenshots/        # README screenshots (dark + light)
 ├── scripts/                # install/run helpers (PowerShell + sh)
 ├── wordlists/              # sample prefix list
 ├── .github/                # CI, issue/PR templates
@@ -133,6 +158,12 @@ cycle n
 | `resume.cfg` | Pointer to the resumable run (`run_id`, `resume_from`, `index`, `status`) |
 
 `runs/` and `resume.cfg` are local user data and are git-ignored.
+
+<p align="center">
+  <img src="docs/screenshots/argus-results-light.png" alt="Argus results and log in the light theme" width="860">
+  <br>
+  <sub>Results and log in the light theme — the same data exported to JSON/CSV from the toolbar.</sub>
+</p>
 
 ## Configuration
 

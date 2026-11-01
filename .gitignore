@@ -20,6 +20,9 @@ htmlcov/
 runs/
 resume.cfg
 screenshots/
+# ...but README images are documentation, not scan output
+!docs/screenshots/
+!docs/screenshots/**
 
 # Editors and OS
 .vscode/

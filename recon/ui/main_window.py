@@ -56,12 +56,10 @@ class ReconApp:
         header = ttk.Frame(self.root, padding=(24, 18, 24, 10))
         header.pack(fill=tk.X)
         ttk.Label(header, text="ARGUS", style="Title.TLabel").pack(side=tk.LEFT)
-        ttk.Label(header, text="  subdomain reconnaissance",
-                  style="Muted.TLabel").pack(side=tk.LEFT, pady=(7, 0))
 
         ttk.Label(header, text=f"v{VERSION}", style="Muted.TLabel").pack(side=tk.RIGHT)
-        self.theme_btn = ttk.Button(header, text=f"Theme · {self.palette.name}",
-                                    style="Ghost.TButton", command=self._toggle_theme)
+        self.theme_btn = ttk.Button(header, text="☀ Light", style="Ghost.TButton",
+                                    command=self._toggle_theme)
         self.theme_btn.pack(side=tk.RIGHT, padx=(0, 16))
 
         ttk.Separator(self.root, orient=tk.HORIZONTAL).pack(fill=tk.X)
@@ -176,7 +174,7 @@ class ReconApp:
         self.fonts = theme.apply(self.root, self.style, self.palette)
         self._apply_component_palette()
         theme.set_titlebar_dark(self.root, self.dark)
-        self.theme_btn.config(text=f"Theme · {self.palette.name}")
+        self.theme_btn.config(text="☀ Light" if self.dark else "☾ Dark")
 
     def _pick_wordlist(self) -> None:
         path = filedialog.askopenfilename(
